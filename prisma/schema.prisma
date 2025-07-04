@@ -38,13 +38,13 @@ model Category {
 }
 
 model Product {
-  id          String         @id @default(uuid())
+  id          String   @id @default(uuid())
   title       String
-  price       Float          @default(0)
+  price       Float    @default(0)
   inStock     Int
-  sizes       Size[]         @default([])
-  slug        String         @unique
-  tags        String[]       @default([])
+  sizes       Size[]   @default([])
+  slug        String   @unique
+  tags        String[] @default([])
   description String
   gender      Gender
 
@@ -52,7 +52,7 @@ model Product {
   category   Category @relation(fields: [categoryId], references: [id])
   categoryId String
 
-  images      ProductImage[]
+  ProductImage ProductImage[]
 
   @@index([gender])
 }
