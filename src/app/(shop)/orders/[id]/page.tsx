@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import Image from 'next/image';
 import clsx from 'clsx';
 import { IoCardOutline } from 'react-icons/io5';
@@ -15,15 +14,11 @@ const productsInCart = [
 
 
 interface Props {
-  params: {
-    id: string;
-  }
+  params: Promise<{ id: string }>;
 }
 
-export default async function({ params }: Props) {
+export default async function OrdersByIdPage({ params }: Props) {
   const { id } = await params;
-
-
 
   return (
     <div className="flex justify-center items-center mb-72 px-10 sm:px-0">

@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 
-export default function() {
+export default function GenderPage() {
   redirect('/');
 
   return (

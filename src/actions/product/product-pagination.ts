@@ -48,7 +48,7 @@ export const getPaginatedProductsWithImages = async({ page = 1, take = 12, gende
       }))
     }
     
-  } catch (error) {
+  } catch {
     throw new Error('There was an error loading the products');
   }
 }

@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 import Image from 'next/image';
 
 import { QuantitySelector, Title } from '@/components';
@@ -13,7 +12,7 @@ const productsInCart = [
 ];
 
 
-export default function() {
+export default function CartPage() {
 
   // redirect('/empty');
 
