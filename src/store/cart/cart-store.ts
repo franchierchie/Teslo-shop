@@ -7,10 +7,16 @@ interface State {
   cart: CartProduct[];
 
   getTotalItems: () => number;
+  getSummaryInformation: () => {
+    subtotal: number;
+    total: number;
+    taxes: number;
+    itemsInCart: number;
+  };
 
   addProductToCart: ( product: CartProduct ) => void;
-  // updateProductQuantity
-  // removeProduct
+  updateProductQuantity: ( product: CartProduct, quantity: number ) => void;
+  removeProduct: ( product: CartProduct ) => void;
 }
 
 
@@ -24,6 +30,27 @@ export const useCartStore = create<State>()(
           const { cart } = get();
           return cart.reduce((total, item) => total + item.quantity, 0);
         },
+
+        getSummaryInformation: () => {
+          const { cart } = get();
+          
+          const subtotal = cart.reduce(
+            (subtotal, item) => (item.price * item.quantity) + subtotal, 0
+          );
+
+          const taxes = subtotal * .21;
+          const total = subtotal + taxes;
+          const itemsInCart = cart.reduce((total, item) => total + item.quantity, 0);
+
+          return {
+            subtotal,
+            total,
+            taxes,
+            itemsInCart,
+          }
+        },
+
+
         addProductToCart: ( product: CartProduct ) => {
           const { cart } = get();
 
@@ -38,7 +65,7 @@ export const useCartStore = create<State>()(
           }
 
           // The size is available, update the amount of items in the cart with that size
-          const updateCartProducts = cart.map((item) => {;
+          const updateCartProducts = cart.map((item) => {
             if ( item.id === product.id && item.size === product.size ) {
               return {...item, quantity: item.quantity + product.quantity}
             }
@@ -47,7 +74,33 @@ export const useCartStore = create<State>()(
           });
 
           set({ cart: updateCartProducts });
-        }
+        },
+        
+
+        updateProductQuantity: ( product: CartProduct, quantity: number ) =>  {
+          const { cart } = get();
+
+          const updateCartProducts = cart.map((item) => {
+            if ( item.id === product.id && item.size === product.size ) {
+              return {...item, quantity: quantity}
+            }
+
+            return item;
+          });
+
+          set({ cart: updateCartProducts });
+        },
+
+
+        removeProduct: ( product: CartProduct ) => {
+          const { cart } = get();
+
+          const updateCartProducts = cart.filter((item) =>
+            item.id !== product.id || item.size !== product.size
+          );
+
+          set({ cart: updateCartProducts });
+        },
       })
     , {
       name: 'shopping-cart'
