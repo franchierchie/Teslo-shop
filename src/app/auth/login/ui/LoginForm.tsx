@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 import { authenticate } from '@/actions';
 import { IoInformationOutline } from 'react-icons/io5';
@@ -15,12 +15,11 @@ export const LoginForm = () => {
     authenticate,
     undefined,
   );
-  const router = useRouter();
 
 
   useEffect(() => {
     if ( errorMessage === 'Success' ) {
-      router.replace( callbackUrl );
+      window.location.replace( callbackUrl );
     }
     
   }, [ errorMessage ]);

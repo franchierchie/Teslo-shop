@@ -7,6 +7,24 @@ import bcryptjs from 'bcryptjs';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   secret: process.env.AUTH_SECRET,
+  pages: {
+    signIn: '/auth/login',
+    newUser: '/auth/new-account',
+  },
+  callbacks: {
+    jwt({ token, user }) {
+      if ( user ) {
+        token.data = user;
+      }
+
+      return token;
+    },
+    session({ session, token, user }) {
+      session.user = token.data as any;
+
+      return session;
+    },
+  },
   providers: [
     Credentials({
       async authorize(credentials) {
