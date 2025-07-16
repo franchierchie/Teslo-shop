@@ -1,7 +1,16 @@
+import { redirect } from 'next/navigation';
 
-export default function ShopLayout({ children }: {
+import { auth } from '../../../auth';
+
+export default async function ShopLayout({ children }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
+  
+  if ( session ) {
+    redirect('/');
+  }
+
   return (
     <div className="flex justify-center px-5">
       <div className="w-full sm:w-[350px]">

@@ -14,14 +14,14 @@ export default function NewAccountPage() {
         <input
           id="fullName"
           type="text"
-          className="px-5 py-2 border bg-gray-200 rounded mb-5"
+          className="px-5 py-2 border border-transparent bg-gray-200 rounded mb-5"
         />
 
         <label htmlFor="email">Email</label>
         <input
           id="email"
           type="email"
-          className="px-5 py-2 border bg-gray-200 rounded mb-5"
+          className="px-5 py-2 border border-transparent bg-gray-200 rounded mb-5"
         />
 
 
@@ -29,7 +29,7 @@ export default function NewAccountPage() {
         <input
           id="password"
           type="password"
-          className="px-5 py-2 border bg-gray-200 rounded mb-5"
+          className="px-5 py-2 border border-transparent bg-gray-200 rounded mb-5"
         />
 
         <button
@@ -39,7 +39,7 @@ export default function NewAccountPage() {
         </button>
 
 
-        {/* divisor l ine */ }
+        {/* divisor line */ }
         <div className="flex items-center my-5">
           <div className="flex-1 border-t border-gray-500"></div>
           <div className="px-2 text-gray-800">O</div>
