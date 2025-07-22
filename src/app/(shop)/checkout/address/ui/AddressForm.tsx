@@ -1,12 +1,17 @@
 'use client';
 
+import { useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
 import clsx from 'clsx';
 
-import { useForm } from 'react-hook-form';
-import type { Country } from '@/interfaces';
+import type { Address, Country } from '@/interfaces';
+import { useAddressStore } from '@/store';
+import { deleteUserAddress, setUserAddress } from '@/actions';
 
 type FormInputs = {
-  fistName: string;
+  firstName: string;
   lastName: string;
   address: string;
   address2?: string;
@@ -19,16 +24,46 @@ type FormInputs = {
 
 interface Props {
   countries: Country[];
+  userStoredAddress?: Partial<Address>;
 }
 
 
-export const AddressForm = ({ countries }: Props) => {
-  const { handleSubmit, register, formState:{ isValid } } = useForm<FormInputs>({
-    defaultValues: {}
+export const AddressForm = ({ countries, userStoredAddress = {} }: Props) => {
+  const router = useRouter();
+  const { handleSubmit, register, formState:{ isValid }, reset } = useForm<FormInputs>({
+    defaultValues: {
+      ...(userStoredAddress as any),
+      rememberAddress: false,
+    }
   });
 
-  const onSubmit = ( data: FormInputs ) => {
-    console.log({ data });
+  const { data: session } = useSession({
+    required: true,
+  });
+
+  const setAddress = useAddressStore(state => state.setAddress);
+  const address = useAddressStore(state => state.address);
+
+  useEffect(() => {
+    if ( address.firstName ) {
+      reset( address );
+    }
+
+  }, []);
+
+
+  const onSubmit = async( data: FormInputs ) => {
+    setAddress( data );
+    const { rememberAddress, ...restAddress } = data;
+
+    if ( data.rememberAddress ) {
+      await setUserAddress( restAddress, session!.user.id);
+
+    } else {
+      await deleteUserAddress( session!.user.id );
+    }
+
+    router.push('/checkout');
   }
 
   return (
@@ -38,7 +73,7 @@ export const AddressForm = ({ countries }: Props) => {
         <input
           type="text" 
           className="p-2 border border-transparent rounded-md bg-gray-200"
-          { ...register('fistName', { required: true }) }
+          { ...register('firstName', { required: true }) }
         />
       </div>
 
@@ -123,7 +158,7 @@ export const AddressForm = ({ countries }: Props) => {
               type="checkbox"
               className="border-gray-500 before:content[''] peer relative h-5 w-5 cursor-pointer appearance-none rounded-md border border-blue-gray-200 transition-all before:absolute before:top-2/4 before:left-2/4 before:block before:h-12 before:w-12 before:-translate-y-2/4 before:-translate-x-2/4 before:rounded-full before:bg-blue-gray-500 before:opacity-0 before:transition-opacity checked:border-blue-500 checked:bg-blue-500 checked:before:bg-blue-500 hover:before:opacity-10"
               id="checkbox"
-              checked
+              // checked
             />
             <div className="pointer-events-none absolute top-2/4 left-2/4 -translate-y-2/4 -translate-x-2/4 text-white opacity-0 transition-opacity peer-checked:opacity-100">
               <svg
