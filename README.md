@@ -7,6 +7,7 @@ Steps to use the app in development.
 4. DB ```docker compose up -d```.
 5. Run Prisma migrations ```npx prisma migrate dev```.  
 6. Execute the SEED ```npm run seed```.
-7. Run the project ```npm run dev```.
+7. Clear localStorage.
+8. Run the project ```npm run dev```.
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.

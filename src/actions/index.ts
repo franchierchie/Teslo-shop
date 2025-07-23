@@ -12,3 +12,5 @@ export * from './auth/logout';
 export * from './auth/register';
 
 export * from './country/get-countries';
+
+export * from './order/place-order';

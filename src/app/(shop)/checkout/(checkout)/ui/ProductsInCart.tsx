@@ -1,17 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
 
 import { useCartStore } from '@/store';
-import { QuantitySelector } from '@/components';
+import { currencyFormat } from '@/utils';
 
 export const ProductsInCart = () => {
   const [loaded, setLoaded] = useState( false );
-  
-  const updateProductQuantity = useCartStore(state => state.updateProductQuantity);
-  const removeProduct = useCartStore(state => state.removeProduct);
   const productsInCart = useCartStore(state => state.cart);
 
   useEffect(() => {
@@ -43,24 +39,8 @@ export const ProductsInCart = () => {
             />
 
             <div>
-              <Link
-                className="hover:underline cursor-pointer"
-                href={`/product/${ product.slug }`}
-              >
-                { product.size } - { product.title }
-              </Link>
-              <p>${ product.price }</p>
-              <QuantitySelector
-                quantity={ product.quantity }
-                onQuantityChanged={quantity => updateProductQuantity( product, quantity )}
-              />
-
-              <button
-                onClick={() => removeProduct( product )}
-                className="underline mt-3 cursor-pointer"
-              >
-                Remove
-              </button>
+              <p>{ product.size } - { product.title } ({ product.quantity})</p>
+              <p className="font-bold">{ currencyFormat( product.price * product.quantity ) }</p>
             </div>
           </div>
         ))
