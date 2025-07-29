@@ -1,6 +1,7 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { IoCloseOutline, IoLogInOutline, IoLogOutOutline, IoPeopleOutline, IoPersonOutline, IoSearchOutline, IoShirtOutline, IoTicketOutline } from 'react-icons/io5';
 import clsx from 'clsx';
@@ -9,6 +10,7 @@ import { logout } from '@/actions';
 import { useUIStore } from '@/store';
 
 export const SideBar = () => {
+  const router = useRouter();
   const isSideMenuOpen = useUIStore(state => state.isSideMenuOpen);
   const closeSideMenu = useUIStore(state => state.closeSideMenu);
 
@@ -107,6 +109,7 @@ export const SideBar = () => {
               onClick={() => {
                 closeSideMenu()
                 logout()
+                router.refresh()
               }}
               className="flex items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all"
             >
