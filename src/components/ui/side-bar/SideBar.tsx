@@ -126,7 +126,7 @@ export const SideBar = () => {
               <div className="w-full h-px bg-gray-200 my-10" />
 
               <Link
-                href="/products"
+                href="/admin/products"
                 onClick={ closeSideMenu }
                 className="flex items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all"
               >
@@ -135,7 +135,7 @@ export const SideBar = () => {
               </Link>
 
               <Link
-                href="/orders"
+                href="/admin/orders"
                 onClick={ closeSideMenu }
                 className="flex items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all"
               >
@@ -144,7 +144,7 @@ export const SideBar = () => {
               </Link>
 
               <Link
-                href="/users"
+                href="/admin/users"
                 onClick={ closeSideMenu }
                 className="flex items-center mt-10 p-2 hover:bg-gray-100 rounded transition-all"
               >
