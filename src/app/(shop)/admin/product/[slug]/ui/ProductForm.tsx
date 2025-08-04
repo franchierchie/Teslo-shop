@@ -1,12 +1,14 @@
 "use client";
 
 import { useForm } from 'react-hook-form';
-
-import { Category, Product } from '@/interfaces';
 import clsx from 'clsx';
 
+import { Category, Product, ProductImage } from '@/interfaces';
+import Image from 'next/image';
+import { createUpdateProduct } from '@/actions';
+
 interface Props {
-  product: Product;
+  product: Product & { ProductImage?: ProductImage[] };
   categories: Category[];
 }
 
@@ -29,6 +31,9 @@ export const ProductForm = ({ product, categories }: Props) => {
     handleSubmit,
     register,
     formState: { isValid },
+    getValues,
+    setValue,
+    watch,
   } = useForm<FormInputs>({
     defaultValues: {
       ...product,
@@ -37,8 +42,30 @@ export const ProductForm = ({ product, categories }: Props) => {
     }
   });
 
+  watch('sizes');
+
+  const onSizeChange = ( size: string ) => {
+    const sizes = new Set( getValues('sizes') );
+    sizes.has( size ) ? sizes.delete( size ) : sizes.add( size );
+    setValue('sizes', Array.from( sizes ));
+  }
+
   const onSubmit = async( data: FormInputs ) => {
-    console.log({ data });
+    const formData = new FormData();
+    const { ...productToSave } = data;
+
+    formData.append('id', product.id ?? '');
+    formData.append('title', productToSave.title);
+    formData.append('slug', productToSave.slug);
+    formData.append('description', productToSave.description);
+    formData.append('price', productToSave.price.toString());
+    formData.append('inStock', productToSave.inStock.toString());
+    formData.append('sizes', productToSave.sizes.toString());
+    formData.append('tags', productToSave.tags);
+    formData.append('categoryId', productToSave.categoryId);
+    formData.append('gender', productToSave.gender);
+
+    const { ok } = await createUpdateProduct( formData );
   }
 
   return (
@@ -122,7 +149,15 @@ export const ProductForm = ({ product, categories }: Props) => {
               // bg-blue-500 text-white <--- if it is selected
               <div
                 key={size}
-                className="flex items-center justify-center w-10 h-10 mr-2 border border-gray-200 rounded-md"
+                onClick={() => onSizeChange( size )}
+                className={
+                  clsx(
+                    "p-2 cursor-pointer border border-gray-200 rounded-md mr-2 mb-2 w-14 transition-all text-center",
+                    {
+                      'bg-blue-500 text-white': getValues('sizes').includes( size )
+                    }
+                  )
+                }
               >
                 <span>{size}</span>
               </div>
@@ -138,6 +173,31 @@ export const ProductForm = ({ product, categories }: Props) => {
               accept="image/png, image/jpeg"
             />
           </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {
+              product.ProductImage?.map(image => (
+                <div key={ image.id }>
+                  <Image
+                    alt={ product.title ?? '' }
+                    src={`/products/${ image.url }`}
+                    width={ 300 }
+                    height={ 300 }
+                    className="rounded-t shadow-md"
+                  />
+
+                  <button
+                    onClick={() => console.log( image.id, image.url )}
+                    type="button"
+                    className="btn-danger rounded-b-xl w-full"
+                  >
+                    Delete
+                  </button>
+                </div>
+              ))
+            }
+          </div>
+
         </div>
       </div>
     </form>
