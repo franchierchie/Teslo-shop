@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/prisma';
 import { Gender, Product, Size } from '@/generated/prisma';
 
@@ -32,6 +33,7 @@ export const createUpdateProduct = async( formData: FormData ) => {
 
   const { id, ...rest } = product;
 
+  try {
   const prismaTransaction = await prisma.$transaction(async (tx) => {
     let product: Product;
     const tagsArray = rest.tags.split(',').map(tag => tag.trim().toLowerCase());
@@ -50,18 +52,46 @@ export const createUpdateProduct = async( formData: FormData ) => {
           },
         },
       });
-
-      console.log({ updatedProduct: product });
       
     } else {
       // Create
+      product = await prisma.product.create({
+        data: {
+          ...rest,
+          sizes: {
+            set: rest.sizes as Size[],
+          },
+          tags: {
+            set: tagsArray,
+          },
+        },
+      });
     }
 
+    // Image loading and saving process
+    if ( formData.getAll('images') ) {
+      console.log( formData.getAll('images') );
+    }
+
+
     return {
+      product,
     }
   });
 
+  revalidatePath('/admin/products');
+  revalidatePath(`/admin/product/${ product.slug }`);
+  revalidatePath(`/products/${ product.slug }`);
+
   return {
-    ok: true
+    ok: true,
+    product: prismaTransaction.product,
+  }
+
+  } catch (error) {
+    return {
+      ok: false,
+      message: 'There was an error creating/updating the product.',
+    }
   }
 }

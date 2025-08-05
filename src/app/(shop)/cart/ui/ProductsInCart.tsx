@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 import { useCartStore } from '@/store';
-import { QuantitySelector } from '@/components';
+import { ProductImage, QuantitySelector } from '@/components';
 
 export const ProductsInCart = () => {
   const [loaded, setLoaded] = useState( false );
@@ -28,8 +28,8 @@ export const ProductsInCart = () => {
       {
         productsInCart.map(product => (
           <div key={`${ product.slug }-${ product.size }`} className="flex mb-5">
-            <Image
-              src={`/products/${ product.image }`}
+            <ProductImage
+              src={ product.image }
               alt={ product.title }
               width={ 100 }
               height={ 100 }
@@ -38,7 +38,6 @@ export const ProductsInCart = () => {
                 height: '100px',
 
               }}
-              priority
               className="mr-5 rounded"
             />
 
