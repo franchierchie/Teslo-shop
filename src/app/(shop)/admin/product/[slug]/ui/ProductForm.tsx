@@ -3,13 +3,13 @@
 import { useForm } from 'react-hook-form';
 import clsx from 'clsx';
 
-import { Category, Product, ProductImage } from '@/interfaces';
-import Image from 'next/image';
-import { createUpdateProduct } from '@/actions';
+import { Category, Product, ProductImage as ProductWithImage } from '@/interfaces';
+import { createUpdateProduct, deleteProductImage } from '@/actions';
 import { useRouter } from 'next/navigation';
+import { ProductImage } from '@/components';
 
 interface Props {
-  product: Partial<Product> & { ProductImage?: ProductImage[] };
+  product: Partial<Product> & { ProductImage?: ProductWithImage[] };
   categories: Category[];
 }
 
@@ -157,8 +157,8 @@ export const ProductForm = ({ product, categories }: Props) => {
           //     { 'btn-primary': isValid, 'btn-disabled': !isValid }
           //   )
           // }
-          // type="submit"
           className="btn-primary w-full"
+          type="submit"
         >
             Save
         </button>
@@ -213,16 +213,16 @@ export const ProductForm = ({ product, categories }: Props) => {
             {
               product.ProductImage?.map(image => (
                 <div key={ image.id }>
-                  <Image
+                  <ProductImage
                     alt={ product.title ?? '' }
-                    src={`/products/${ image.url }`}
+                    src={ image.url }
                     width={ 300 }
                     height={ 300 }
                     className="rounded-t shadow-md"
                   />
 
                   <button
-                    onClick={() => console.log( image.id, image.url )}
+                    onClick={() => deleteProductImage( image.id, image.url )}
                     type="button"
                     className="btn-danger rounded-b-xl w-full"
                   >
