@@ -1,6 +1,4 @@
 import { redirect } from 'next/navigation';
-import Link from 'next/link';
-import { IoCardOutline } from 'react-icons/io5';
 
 import { Pagination, Title } from '@/components';
 import { getPaginatedUsers } from '@/actions';

@@ -22,7 +22,7 @@ export const LoginForm = () => {
       window.location.replace( callbackUrl );
     }
     
-  }, [ errorMessage ]);
+  }, [ errorMessage, callbackUrl ]);
 
   return (
     <form action={ formAction } className="flex flex-col">

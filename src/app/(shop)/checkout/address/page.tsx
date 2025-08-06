@@ -11,7 +11,7 @@ export default async function AddressPage() {
 
   if ( !session?.user ) {
     return (
-      <h3 className="text-5xl">500 - There's no user session</h3>
+      <h3 className="text-5xl">500 - There is no user session</h3>
     )
   }
 

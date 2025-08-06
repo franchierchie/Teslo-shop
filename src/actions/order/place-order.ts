@@ -131,10 +131,16 @@ export const placeOrder = async( productIds: ProductToOrder[], address: Address 
       prismaTx: prismaTx,
     }
 
-  } catch (error: any) {
+  } catch (error: unknown) {
+    let message = "Something went wrong.";
+
+    if ( error instanceof Error ) {
+      message = error.message;
+    }
+
     return {
       ok: false,
-      message: error?.message,
+      message,
     }
   }
 }

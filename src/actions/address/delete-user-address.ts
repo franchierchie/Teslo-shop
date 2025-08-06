@@ -1,11 +1,10 @@
 'use server';
 
-import { Address } from '@/interfaces';
 import { prisma } from '@/lib/prisma';
 
 export const deleteUserAddress = async(userId: string) => {
   try {
-    const deleted = await prisma.userAddress.delete({
+    await prisma.userAddress.delete({
       where: { userId },
     });
 

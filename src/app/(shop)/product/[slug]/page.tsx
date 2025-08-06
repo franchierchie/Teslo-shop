@@ -1,6 +1,6 @@
 export const revalidate = 604800; // 7 days
 
-import { Metadata, ResolvingMetadata } from 'next';
+import { Metadata } from 'next'; // ResolvingMetadata
 import { notFound } from 'next/navigation';
 
 import { titleFont } from '@/config/fonts';
@@ -15,7 +15,7 @@ interface Props {
 
 export async function generateMetadata(
   { params }: Props,
-  parent: ResolvingMetadata
+  // parent: ResolvingMetadata
 ): Promise<Metadata> {
   const slug = (await params).slug
 
